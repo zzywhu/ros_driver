@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/isvl/ros_driver/src/Livox-SDK/devel/setup.sh

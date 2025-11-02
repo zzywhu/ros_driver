@@ -6,7 +6,7 @@ add_compile_options(-std=c++14)
 
 if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "aarch64")
   LINK_DIRECTORIES(/opt/MVS/lib/aarch64/)
-  message(STATUS "Running on arrch64")
+  message(STATUS "Running on aarch64")
 elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64")
   LINK_DIRECTORIES(/opt/MVS/lib/64/)
   message(STATUS "Running on x86_64")

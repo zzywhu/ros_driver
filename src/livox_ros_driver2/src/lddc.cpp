@@ -194,28 +194,51 @@ namespace livox_ros
     }
 
     //******************************************************************** add code
-    if (isOpended == false)
+    if (!isOpended)
+{
+    const char* user_name = getenv("USER");
+    if (!user_name)
     {
-      const char *user_name = getlogin();
-      std::string path_for_time_stamp = "/home/" + std::string(user_name) + "/timeshare";
+        ROS_ERROR("Failed to get user name! Using default path /tmp/timeshare");
+        user_name = "unknown";
+    }
 
-      const char *shared_file_name = path_for_time_stamp.c_str();
-      int fd = open(shared_file_name, O_CREAT | O_RDWR | O_TRUNC, 0666);
-      if (fd == -1)
-      {
+    std::string path_for_time_stamp = "/home/" + std::string(user_name) + "/timeshare";
+    const char *shared_file_name = path_for_time_stamp.c_str();
+
+    int fd = open(shared_file_name, O_CREAT | O_RDWR, 0666);
+    if (fd == -1)
+    {
         ROS_ERROR("open failed\n");
         isOpended = false;
-      }
-      else
-      {
-        ROS_ERROR("open code: %d\n", fd);
-        isOpended = true;
-      }
-      lseek(fd, sizeof(time_stamp) * 1, SEEK_SET);
-      write(fd, "", 1);
-      pointt = (time_stamp *)mmap(NULL, sizeof(time_stamp) * 1,
-                                  PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     }
+    else
+    {
+        ROS_INFO("open fd: %d\n", fd);
+        isOpended = true;
+
+        // 扩展文件到需要大小
+        if (ftruncate(fd, sizeof(time_stamp)) == -1)
+        {
+            ROS_ERROR("ftruncate failed");
+            close(fd);
+            isOpended = false;
+        }
+        else
+        {
+            // 映射共享内存
+            pointt = (time_stamp*)mmap(NULL, sizeof(time_stamp),
+                                       PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+            if (pointt == MAP_FAILED)
+            {
+                ROS_ERROR("mmap failed");
+                close(fd);
+                isOpended = false;
+            }
+        }
+    }
+}
+
     //********************************************************************
 
     while (!lds_->IsRequestExit() && !QueueIsEmpty(p_queue))

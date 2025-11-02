@@ -305,9 +305,14 @@ int main(int argc, char **argv) {
 
   pub = it.advertise(pub_topic, 1);
   
-  const char *user_name = getlogin();
+  const char* user_name = getenv("USER");
+  if (user_name == nullptr) {
+    ROS_ERROR("Failed to get user name! Using default path /tmp/timeshare");
+    user_name = "unknown";
+  }
   std::string path_for_time_stamp = "/home/" + std::string(user_name) + "/timeshare";
   const char *shared_file_name = path_for_time_stamp.c_str();
+  std::cout << "Shared file name: " << shared_file_name << std::endl;
 
   int fd = open(shared_file_name, O_RDWR);
 
