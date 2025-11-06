@@ -16,9 +16,9 @@ ExposureTime: 30000 # us
 # AutoExposureTimeUpper: 20000
 
 image_scale: 1 # 1 0.5
-GainAuto: 0 # Gain Auto, 0 stands for Off, 1 stands for Once, 2 stands for Continues
+GainAuto: 2 # Gain Auto, 0 stands for Off, 1 stands for Once, 2 stands for Continues
 Gain: 0 # min: 0   max: 17.0166
-Gamma: 0.5  # min: 0   max: 17.0166
+Gamma: 1.0  # min: 0   max: 17.0166
 GammaSelector: 1 # 0 stands for user, 1 stands for sRGB
 GammaEnable: 1
 PixelFormat: 3 # 0: RGB8, 1: BayerRG8, 2: BayerRG12Packed, 3: BayerGB12Packed, 4: BayerGB8
